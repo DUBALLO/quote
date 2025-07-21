@@ -1,6 +1,6 @@
 // 공통 설정
 const CONFIG = {
-    APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw7cQQQtTvdxNQq6qkOW37HBbp8IMpqBQtFbHy6TIFW0btxZM0-qarN8t36a9k4Mc24/exec',
+    APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzceH5Ud78uhLifOAJXSVSCPk5hdsrNsWfGmy5npQDOwigdSxlL80NzlQAAMVV_2ZiZBw/exec',
     COMPANY_INFO: {
         name: '두발로㈜',
         phone: '031-866-8872',
