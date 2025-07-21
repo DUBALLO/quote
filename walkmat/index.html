@@ -1,10 +1,178 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <title>보행매트 계산기</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>보행매트 견적 계산기</title>
+    <link rel="stylesheet" href="../shared/css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>보행매트 견적 계산기</h1>
-    <p>준비 중입니다!</p>
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="header-bg rounded-t-lg p-6 text-white">
+            <h1 class="text-3xl font-bold text-center">보행매트 견적 계산기</h1>
+            <p class="text-center mt-2 opacity-90">원하시는 규격과 수량을 입력하시면 즉시 견적을 확인하실 수 있습니다</p>
+        </div>
+        
+        <div class="quote-container rounded-b-lg p-6 mb-8">
+            <div id="matSelections">
+                <div class="mat-selection border-b pb-6 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-800">매트 #1</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div class="form-group">
+                                <label for="thickness-0" class="form-label">두께 선택</label>
+                                <select id="thickness-0" class="form-select">
+                                    <option value="30">30mm</option>
+                                    <option value="35">35mm</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="width-0" class="form-label">폭 선택 (mm)</label>
+                                <select id="width-0" class="form-select">
+                                    <option value="600">600mm</option>
+                                    <option value="800">800mm</option>
+                                    <option value="1000" selected>1000mm</option>
+                                    <option value="1200">1200mm</option>
+                                    <option value="1500">1500mm</option>
+                                    <option value="1800">1800mm (30mm 두께만)</option>
+                                    <option value="2000">2000mm</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="type-0" class="form-label">타입 선택</label>
+                                <select id="type-0" class="form-select">
+                                    <option value="DB">일반형 (DB)</option>
+                                    <option value="DBM">경사형 (DBM) - 1000~1500mm만 가능</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="form-group">
+                                <label for="length-0" class="form-label">길이 (m)</label>
+                                <input type="number" id="length-0" class="form-input" min="1" value="1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-center mb-6">
+                <button id="addMatBtn" class="btn btn-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg>
+                    매트 추가하기
+                </button>
+            </div>
+            
+            <div class="border-t pt-6">
+                <h3 class="text-lg font-medium text-gray-800 mb-4">추가 부속품 (고정핀, 권장수량 m당 2개)</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <input type="number" id="accessory1" min="0" value="0" class="w-20 px-2 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <label for="accessory1" class="ml-2 text-sm text-gray-600">철판 (15×200×t1mm) <span class="text-gray-500">- 부드러운 지반에 사용</span></label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="number" id="accessory2" min="0" value="0" class="w-20 px-2 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <label for="accessory2" class="ml-2 text-sm text-gray-600">철근 (Φ10×250mm) <span class="text-gray-500">- 암석 지반에 사용</span></label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="number" id="accessory3" min="0" value="0" class="w-20 px-2 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <label for="accessory3" class="ml-2 text-sm text-gray-600">철근 (Φ10×300mm) <span class="text-gray-500">- 암석 지반에 사용</span></label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <button id="calculateBtn" class="w-full btn btn-primary py-3 text-lg">
+                    견적 계산하기
+                </button>
+            </div>
+        </div>
+        
+        <div id="resultContainer" class="result-container bg-white rounded-lg p-6 shadow-md hidden">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">견적 결과</h2>
+            
+            <div class="space-y-4">
+                <div class="bg-gray-50 p-4 rounded-md">
+                    <table class="quote-table">
+                        <thead>
+                            <tr>
+                                <th>품목</th>
+                                <th>물품식별번호</th>
+                                <th>규격</th>
+                                <th class="text-right">단가</th>
+                                <th class="text-right">수량</th>
+                                <th class="text-right">금액</th>
+                            </tr>
+                        </thead>
+                        <tbody id="quoteItems">
+                            <!-- Items will be inserted here -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="border-t font-bold">
+                                <td colspan="5" class="text-right py-3">총 견적 금액</td>
+                                <td id="totalAmount" class="text-right py-3 text-blue-700">-</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <div class="text-sm text-gray-500">
+                    <p>※ 인도조건: 납품장소 하차도</p>
+                    <p>※ 부가세 포함</p>
+                    <p>※ 견적 유효기간: <span id="expiryDate">2025년 8월 17일</span>까지</p>
+                </div>
+                
+                <!-- 견적요청자 정보 입력 폼 -->
+                <div class="customer-info-box">
+                    <h3 class="text-lg font-medium text-gray-800 mb-4">견적요청자 정보</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="form-group">
+                            <label for="customerName" class="form-label">고객명(기관명) *</label>
+                            <input type="text" id="customerName" class="form-input" placeholder="예: 홍길동 또는 ㈜두발로" minlength="2" maxlength="50">
+                        </div>
+                        <div class="form-group">
+                            <label for="customerPhone" class="form-label">연락처 *</label>
+                            <input type="tel" id="customerPhone" class="form-input" placeholder="예: 010-1234-5678">
+                        </div>
+                        <div class="form-group">
+                            <label for="customerEmail" class="form-label">이메일 *</label>
+                            <input type="email" id="customerEmail" class="form-input" placeholder="예: contact@company.com" required>
+                        </div>
+                    </div>
+                    <div id="validationError" class="validation-error">
+                        고객명과 연락처를 기재하세요
+                    </div>
+                </div>
+                
+                <div class="mt-4 space-x-2">
+                    <button id="emailBtn" class="btn btn-primary">
+                        견적서 이메일 발송
+                    </button>
+                    <button id="newQuoteBtn" class="btn btn-secondary">
+                        새 견적 작성
+                    </button>
+                    <button id="debugBtn" class="btn" style="background-color: #eab308; color: white;">
+                        디버그 정보 보기
+                    </button>
+                </div>
+                
+                <div id="debugInfo" class="debug-info">
+                    <!-- 디버그 정보가 여기에 표시됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 파일들 -->
+    <script src="../shared/js/common.js"></script>
+    <script src="../shared/js/walkmat.js"></script>
 </body>
 </html>
