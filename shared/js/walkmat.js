@@ -319,8 +319,8 @@ class WalkmatCalculator {
         };
     }
     
-// 이메일 발송 처리
-async handleEmailSend() {
+    // 이메일 발송 처리
+    async handleEmailSend() {
     // 고객 정보 유효성 검사
     if (!Validator.validateCustomerInfo()) {
         return;
