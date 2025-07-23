@@ -319,13 +319,23 @@ class WalkmatCalculator {
         };
     }
     
-    // 이메일 발송 처리
-    async handleEmailSend() {
-        // 고객 정보 유효성 검사
-        if (!Validator.validateCustomerInfo()) {
-            return;
-        }
-        
+// 이메일 발송 처리
+async handleEmailSend() {
+    // 고객 정보 유효성 검사
+    if (!Validator.validateCustomerInfo()) {
+        return;
+    }
+    
+    // 개인정보 동의 체크 확인
+    const privacyConsent = document.getElementById('privacyConsent');
+    if (!privacyConsent.checked) {
+        alert('개인정보 수집·이용에 동의해주세요.');
+        return;
+    }
+    
+    const emailBtn = document.getElementById('emailBtn');
+    // ... 나머지 코드
+}        
         const emailBtn = document.getElementById('emailBtn');
         emailBtn.disabled = true;
         emailBtn.textContent = '발송 중...';
