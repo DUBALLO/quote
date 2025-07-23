@@ -245,3 +245,118 @@ class WalkmatCalculator {
                 length,
                 'walkmat'
             );
+        }
+        
+        // 부속품 처리
+        this.processAccessories();
+        
+        // 결과 표시
+        const resultContainer = document.getElementById('resultContainer');
+        resultContainer.classList.remove('hidden');
+        resultContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // 부속품 처리
+    processAccessories() {
+        const accessory1Qty = parseInt(document.getElementById('accessory1').value);
+        const accessory2Qty = parseInt(document.getElementById('accessory2').value);
+        const accessory3Qty = parseInt(document.getElementById('accessory3').value);
+        
+        if (accessory1Qty > 0) {
+            this.quoteTable.addItem(
+                WALKMAT_ACCESSORIES[0].id, 
+                WALKMAT_ACCESSORIES[0].code, 
+                WALKMAT_ACCESSORIES[0].name, 
+                "-", 
+                WALKMAT_ACCESSORIES[0].price, 
+                accessory1Qty,
+                'accessory'
+            );
+        }
+        
+        if (accessory2Qty > 0) {
+            this.quoteTable.addItem(
+                WALKMAT_ACCESSORIES[1].id, 
+                WALKMAT_ACCESSORIES[1].code, 
+                WALKMAT_ACCESSORIES[1].name, 
+                "-", 
+                WALKMAT_ACCESSORIES[1].price, 
+                accessory2Qty,
+                'accessory'
+            );
+        }
+        
+        if (accessory3Qty > 0) {
+            this.quoteTable.addItem(
+                WALKMAT_ACCESSORIES[2].id, 
+                WALKMAT_ACCESSORIES[2].code, 
+                WALKMAT_ACCESSORIES[2].name, 
+                "-", 
+                WALKMAT_ACCESSORIES[2].price, 
+                accessory3Qty,
+                'accessory'
+            );
+        }
+    }
+    
+    // 견적 데이터 수집
+    collectQuoteData() {
+        const customerName = document.getElementById('customerName').value.trim();
+        const customerPhone = document.getElementById('customerPhone').value.trim();
+        const customerEmail = document.getElementById('customerEmail').value.trim();
+        
+        const items = this.quoteTable.collectQuoteData();
+        
+        return {
+            customerName: customerName,
+            email: customerEmail,
+            phone: customerPhone,
+            productType: '보행매트',
+            items: items,
+            totalAmount: this.quoteTable.total,
+            privacyConsent: true,
+            timestamp: new Date().toISOString()
+        };
+    }
+    
+    // 이메일 발송 처리
+    async handleEmailSend() {
+        // 고객 정보 유효성 검사
+        if (!Validator.validateCustomerInfo()) {
+            return;
+        }
+        
+        // 개인정보 동의 체크 확인
+        const privacyConsent = document.getElementById('privacyConsent');
+        if (!privacyConsent || !privacyConsent.checked) {
+            alert('개인정보 수집·이용에 동의해주세요.');
+            return;
+        }
+        
+        const emailBtn = document.getElementById('emailBtn');
+        emailBtn.disabled = true;
+        emailBtn.textContent = '발송 중...';
+        
+        try {
+            const quoteData = this.collectQuoteData();
+            await EmailService.sendQuote(quoteData);
+            alert('✅ 견적서 발송 요청이 완료되었습니다!\n잠시 후 이메일을 확인해주세요.');
+            
+        } catch (error) {
+            console.error('Error:', error);
+            alert('❌ 견적서 발송에 실패했습니다.\n잠시 후 다시 시도해주세요.');
+        } finally {
+            emailBtn.disabled = false;
+            emailBtn.textContent = '견적서 이메일 발송';
+        }
+    }
+    
+    // 새 견적 작성
+    handleNewQuote() {
+        // 추가된 매트들 제거 (첫 번째만 남기기)
+        const matSelections = document.getElementById('matSelections');
+        while (matSelections.children.length > 1) {
+            matSelections.removeChild(matSelections.lastChild);
+        }
+        
+        //
