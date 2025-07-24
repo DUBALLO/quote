@@ -326,13 +326,6 @@ class WalkmatCalculator {
             return;
         }
         
-        // 개인정보 동의 체크 확인
-        const privacyConsent = document.getElementById('privacyConsent');
-        if (!privacyConsent || !privacyConsent.checked) {
-            alert('개인정보 수집·이용에 동의해주세요.');
-            return;
-        }
-        
         const emailBtn = document.getElementById('emailBtn');
         emailBtn.disabled = true;
         emailBtn.textContent = '발송 중...';
@@ -359,4 +352,39 @@ class WalkmatCalculator {
             matSelections.removeChild(matSelections.lastChild);
         }
         
-        //
+        // 폼 리셋
+        const resultContainer = document.getElementById('resultContainer');
+        resultContainer.classList.add('hidden');
+        
+        document.getElementById('customerName').value = '';
+        document.getElementById('customerPhone').value = '';
+        document.getElementById('customerEmail').value = '';
+        document.getElementById('accessory1').value = '0';
+        document.getElementById('accessory2').value = '0';
+        document.getElementById('accessory3').value = '0';
+        
+        const validationError = document.getElementById('validationError');
+        if (validationError) {
+            validationError.style.display = 'none';
+        }
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+// 디버그 정보 표시 함수 (전역 함수로 정의)
+function showDebugInfo() {
+    if (window.walkmatCalculator) {
+        const quoteData = window.walkmatCalculator.collectQuoteData();
+        DebugInfo.show(quoteData);
+    }
+}
+
+// DOM이 로드된 후 보행매트 계산기 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    // 공통 스크립트가 로드될 때까지 잠시 대기
+    setTimeout(() => {
+        window.walkmatCalculator = new WalkmatCalculator();
+        console.log('✅ 보행매트 계산기 초기화 완료');
+    }, 100);
+});
