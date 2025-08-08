@@ -1,10 +1,10 @@
 // 공통 설정
 const CONFIG = {
-    APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzvx-J3VntBiniVB5VB_wk1u5qzNDh1mqzMZ9mBhndgsEhUdiSH0XUgzhTzGOrjsTXOzw/exec',
+    APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxXSMPn6_3LCZGOIVGEGJpMkfG0-gd-Lc6eblTCKdvib2AsDcJWJWD6xMRYGU4XAOpkgA/exec',
     COMPANY_INFO: {
         name: '두발로㈜',
         phone: '031-866-8872',
-        email: 'quitesotrue@gmail.com'
+        email: 'man@duballo.kr'  // Workspace 계정으로 업데이트
     }
 };
 
